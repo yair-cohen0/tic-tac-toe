@@ -17,6 +17,12 @@ The game is managed by a `Game` class which:
 ## Server-Side Validation
 The server ensures all actions are valid and provides respective indications, which are displayed in the browser console.
 
+## Game End Check
+The game end check is pretty simple, efficient, and straight forward.
+I check every possible win condition, diagonal, row or column with simple array positions.
+If no player has won I check if all the cells are filled. If they are,
+the game ended in a draw.
+
 ## Run Instructions
 
 ### Server
