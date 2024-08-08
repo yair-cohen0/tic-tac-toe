@@ -11,7 +11,16 @@ export class Game {
         if (this.players.size >= 2) {
             throw new Error('Too many players');
         }
+        if (this.players.has(socketId)) {
+            throw new Error('Already connected');
+        }
         this.players.set(socketId, this.players.size === 0);
+    }
+
+    removePlayer(socketId) {
+        if (this.players.has(socketId)) {
+            this.players.delete(socketId);
+        }
     }
 
     makeMove(socketId, x, y) {
@@ -24,11 +33,11 @@ export class Game {
         if (this.players.get(socketId) !== this.currentPlayer) {
             throw new Error('Not your turn');
         }
-        if (this.board[x][y]) {
+        if (this.board[y][x]) {
             throw new Error('Place Taken');
         }
 
-        this.board[x][y] = this.players.get(socketId);
+        this.board[y][x] = playersEnum[this.players.get(socketId)];
         this.currentPlayer = !this.currentPlayer;
     }
 
@@ -36,3 +45,8 @@ export class Game {
         return { board: this.board, turn: this.currentPlayer };
     }
 }
+
+const playersEnum = {
+    true: 'X',
+    false: 'O',
+};

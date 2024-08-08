@@ -29,6 +29,7 @@ const Cell = styled.div`
     height: 100px;
     background-color: #fff;
     border: 2px solid #000;
+    color: #000;
     font-size: 2em;
     cursor: pointer;
 
