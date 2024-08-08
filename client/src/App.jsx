@@ -4,8 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Board } from './components/Board';
 
 function App() {
-    socket.on('connection', console.log);
-
     const gameIdInput = useRef(null);
     const [gameId, setGameId] = useState(null);
 
@@ -20,7 +18,6 @@ function App() {
         };
 
         const gameStateUpdate = (res) => {
-            console.log(res.board);
             setBoard(res.board);
         };
 
@@ -38,10 +35,19 @@ function App() {
             }
         };
 
+        const onGameEnd = (res) => {
+            if (res.end === 'draw') {
+                console.log('Game ended in a draw');
+            } else {
+                console.log(`${res.end} Won!`);
+            }
+        };
+
         socket.on('connection', onConnection);
         socket.on('gameState', gameStateUpdate);
         socket.on('join-game', onJoinGame);
         socket.on('move', onMove);
+        socket.on('game-end', onGameEnd);
 
         return () => {
             socket.off('connection', onConnection);

@@ -64,6 +64,11 @@ io.on('connection', function (socket) {
 
             game.makeMove(socket.id, x, y);
             io.to(gameId).emit('gameState', game.getState());
+
+            const end = game.checkEnd();
+            if (end) {
+                io.to(gameId).emit('game-end', { end });
+            }
         } catch (e) {
             socket.emit('move', { error: e.message });
         }
