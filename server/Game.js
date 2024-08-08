@@ -14,7 +14,10 @@ export class Game {
         if (this.players.has(socketId)) {
             throw new Error('Already connected');
         }
-        this.players.set(socketId, this.players.size === 0);
+
+        // If no current is true else is set to opposite
+        const current = !!this.players.values().next().value;
+        this.players.set(socketId, !current);
     }
 
     removePlayer(socketId) {
