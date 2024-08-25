@@ -1,46 +1,49 @@
 export class Game {
-    constructor() {
-        this.board = Array(3)
-            .fill(null)
-            .map(() => Array(3).fill(null));
-        this.players = new Map();
-        this.currentPlayer = true;
+    constructor(id, game) {
+        this.id = game?.id || id;
+        this.board =
+            game?.board ||
+            Array(3)
+                .fill(null)
+                .map(() => Array(3).fill(null));
+        this.players = game?.players || {};
+        this.currentPlayer = game?.currentPlayer || true;
     }
 
     addPlayer(socketId) {
-        if (this.players.size >= 2) {
+        if (Object.keys(this.players).length >= 2) {
             throw new Error('Too many players');
         }
-        if (this.players.has(socketId)) {
+        if (this.players[socketId]) {
             throw new Error('Already connected');
         }
 
         // If no current is true else is set to opposite
-        const current = !!this.players.values().next().value;
-        this.players.set(socketId, !current);
+        const current = !!Object.values(this.players)[0];
+        this.players[socketId] = !current;
     }
 
     removePlayer(socketId) {
-        if (this.players.has(socketId)) {
-            this.players.delete(socketId);
+        if (this.players[socketId]) {
+            delete this.players[socketId];
         }
     }
 
     makeMove(socketId, x, y) {
-        if (this.players.size <= 1) {
+        if (Object.keys(this.players).length <= 1) {
             throw new Error('Only one player');
         }
-        if (!this.players.has(socketId)) {
+        if (!this.players[socketId]) {
             throw new Error('Player does not exist');
         }
-        if (this.players.get(socketId) !== this.currentPlayer) {
+        if (this.players[socketId] !== this.currentPlayer) {
             throw new Error('Not your turn');
         }
         if (this.board[y][x]) {
             throw new Error('Place Taken');
         }
 
-        this.board[y][x] = playersEnum[this.players.get(socketId)];
+        this.board[y][x] = playersEnum[this.players[socketId]];
         this.currentPlayer = !this.currentPlayer;
     }
 
