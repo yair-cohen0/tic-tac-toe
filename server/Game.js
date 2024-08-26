@@ -33,7 +33,7 @@ export class Game {
         if (Object.keys(this.players).length <= 1) {
             throw new Error('Only one player');
         }
-        if (!this.players[socketId]) {
+        if (typeof this.players[socketId] !== 'boolean') {
             throw new Error('Player does not exist');
         }
         if (this.players[socketId] !== this.currentPlayer) {

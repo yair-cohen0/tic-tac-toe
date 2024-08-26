@@ -14,7 +14,7 @@ const games = new Map();
 
 await setupRabbitMQ(({ game: gameInfo }) => {
     if (!gameInfo.id) {
-        return;
+        throw new Error('No game Id in queue msg');
     }
     let game = games.get(gameInfo.id);
 
@@ -62,7 +62,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnecting', () => {
-        const gameId = Array.from(games.keys()).find((id) => !!games.get(id).players.has[socket.id]);
+        const gameId = Array.from(games.keys()).find((id) => typeof games.get(id).players[socket.id] === 'boolean');
         if (gameId) {
             const game = games.get(gameId);
             game.removePlayer(socket.id);
